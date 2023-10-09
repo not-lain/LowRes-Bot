@@ -27,10 +27,13 @@ async def meme(ctx,text1:str,text2:str):
     if text1 == None or text2 == None:
         return await ctx.respond('please provide 2 texts')
     
-    meme_name = f'{text1}/{text2}'
+    
     d = {' ': '_', '/': '~s', '?': '~q', '%': '~p', '#': '~h', '+': '~p', '"': "''"}
     for k, v in d.items():
-        meme_name = meme_name.replace(k, v)
+        text1 = text1.replace(k, v)
+        text2 = text2.replace(k, v)
+    meme_name = f'{text1}/{text2}'
+    
 
     meme_url = f'https://memegen.link/touch/{meme_name}/.jpg'
     await ctx.respond(meme_url)
