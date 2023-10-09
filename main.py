@@ -1,25 +1,15 @@
 import discord
-from discord.ext import commands
-with open('token.txt', 'r') as f:
-    token = f.read()
+from settings import TOKEN
+bot = discord.Bot()
 
 
-# client = discord.Client(intents=discord.Intents.default())
-client = commands.Bot(command_prefix = '!',intents=discord.Intents.default()) # Create a new bot instance
-
-
-@client.event # Event decorator/wrapper
+@bot.event
 async def on_ready():
-    print('Bot is ready')
-    print("------------------")
+    print(f"logged as {bot.user}")
 
-@client.command()
-async def hello(ctx):
-    await ctx.send('Hello!')
-
+@bot.slash_command(name='ping',description='replies to the bot ping')
+async def ping(ctx):
+    await ctx.respond(f'Pong! {round(bot.latency * 1000)}ms')
 
 
-
-client.run(token) # Run the bot
-
-
+bot.run(TOKEN)
