@@ -45,8 +45,11 @@ async def meme(ctx,text1:str,text2:str):
 @bot.slash_command(name='ask',description='ask falcon-180b-demo AI')
 async def ask(ctx,*,question):
     await ctx.respond(question)
-    prediction = predict(question)
-    await ctx.respond(prediction)
+    try : 
+        prediction = predict(question)
+        await ctx.respond(prediction)
+    except Exception as e: 
+        await ctx.respond(e)
     
     
 
