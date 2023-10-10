@@ -1,2 +1,5 @@
 py-cord
 python-dotenv
+aiohttp
+gradio
+gradio_client
