@@ -4,6 +4,9 @@ from settings import TOKEN
 import aiohttp
 from gradio_client import Client
 import time
+import gradio as gr
+import threading
+
 bot = discord.Bot()
 
 client = Client("tiiuae/falcon-180b-demo")
@@ -51,7 +54,21 @@ async def ask(ctx,*,question):
     except Exception as e: 
         await ctx.respond(e)
     
-    
+# bot.run(TOKEN)
 
+def run_bot():
+    if not TOKEN:
+        print("DISCORD_TOKEN NOT SET")
+    else:
+        bot.run(TOKEN)
 
-bot.run(TOKEN)
+# run_bot() in a thread
+t = threading.Thread(target=run_bot)
+t.start()
+
+with gr.Blocks() as demo:
+    gr.Markdown(f"""
+    # LowRes bot web app
+    """)
+
+demo.launch()
