@@ -1,11 +1,8 @@
-import io
 import discord
 from settings import TOKEN
-import aiohttp
 from gradio_client import Client
-import time
-import gradio as gr
-import threading
+from fastapi import FastAPI
+import asyncio
 
 bot = discord.Bot()
 
@@ -56,19 +53,18 @@ async def ask(ctx,*,question):
     
 # bot.run(TOKEN)
 
-def run_bot():
-    if not TOKEN:
-        print("DISCORD_TOKEN NOT SET")
-    else:
-        bot.run(TOKEN)
 
-# run_bot() in a thread
-t = threading.Thread(target=run_bot)
-t.start()
+app = FastAPI()
+@app.on_event("startup")
+async def startup():
+    try : 
+        if not TOKEN:
+            print("DISCORD_TOKEN NOT SET")
+        else:
+            asyncio.create_task(bot.start(TOKEN))
+            print("Bot started")
+    except Exception as e:
+        print(e)
 
-with gr.Blocks() as demo:
-    gr.Markdown(f"""
-    # LowRes bot web app
-    """)
 
-demo.launch()
+
