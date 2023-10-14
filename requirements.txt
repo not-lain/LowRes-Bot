@@ -3,3 +3,4 @@ python-dotenv
 gradio
 gradio_client
 fastapi
+asyncio
