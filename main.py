@@ -48,5 +48,10 @@ async def startup():
     except Exception as e:
         print(e)
 
+# /home 
+@app.get("/")
+async def home():
+    return {"message": "Hello World"}
+
 
 
