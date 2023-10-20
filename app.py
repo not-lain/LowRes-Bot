@@ -18,6 +18,7 @@ def predict(text):
 @bot.event
 async def on_ready():
     print(f"logged as {bot.user}")
+    event.set()
 
 @bot.slash_command(name='ping',description='replies to the bot ping')
 async def ping(ctx):
