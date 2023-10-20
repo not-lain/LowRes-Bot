@@ -4,3 +4,4 @@ gradio
 gradio_client
 fastapi
 asyncio
+uvicorn[standard]

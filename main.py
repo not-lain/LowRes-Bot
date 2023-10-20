@@ -1,8 +1,13 @@
 import discord
-from settings import TOKEN
 from gradio_client import Client
-from fastapi import FastAPI
-import asyncio
+import os
+import threading
+import gradio as gr
+from threading import Event
+
+event = Event()
+
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 
 bot = discord.Bot()
 
@@ -36,22 +41,20 @@ async def ask(ctx,*,question):
         await ctx.respond(e)
 
 
-app = FastAPI()
-@app.on_event("startup")
-async def startup():
-    try : 
-        if not TOKEN:
-            print("DISCORD_TOKEN NOT SET")
-        else:
-            asyncio.create_task(bot.start(TOKEN))
-            print("Bot started")
-    except Exception as e:
-        print(e)
-
-# /home 
-@app.get("/")
-async def home():
-    return {"message": "Hello World"}
+# running in thread
+def run_bot():
+    if not DISCORD_TOKEN:
+        print("DISCORD_TOKEN NOT SET")
+        event.set()
+    else:
+        bot.run(DISCORD_TOKEN)
 
 
+threading.Thread(target=run_bot).start()
+event.wait()
 
+with gr.Blocks() as demo:
+    gr.Markdown("## Falcon-180b-demo")
+
+
+demo.launch()
