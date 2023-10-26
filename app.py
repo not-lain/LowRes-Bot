@@ -34,12 +34,19 @@ async def echo(ctx,*,message):
 # AI prediction command
 @bot.slash_command(name='ask',description='ask falcon-180b-demo AI')
 async def ask(ctx,*,question):
-    await ctx.respond(question)
+    # create a thread to run the prediction
+    # channel = bot.get_channel(ctx.channel_id)
+    # create a thread 
+
+    await ctx.respond(f"Creating a thread for {ctx.author.mention} ")
+    # await thread.send("This message is sent to the created thread!")
     try : 
+        # preparing the prediction before creating the thread
         prediction = predict(question)
-        await ctx.respond(prediction)
+        thread =  await ctx.channel.create_thread(name=question,type=discord.ChannelType.public_thread) 
+        await thread.send(prediction)
     except Exception as e: 
-        await ctx.respond(e)
+        await thread.send(e)
 
 
 # running in thread
