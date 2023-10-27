@@ -8,12 +8,11 @@ from threading import Event
 event = Event()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-
 bot = discord.Bot()
 
 client = Client("tiiuae/falcon-180b-demo")
-def predict(text):
-    return client.predict(text,"", 0.9, 256, 0.95, 1.0)
+def predict(text,history=""):
+    return client.predict(text,history, 0.9, 256, 0.95, 1.0)
 
 @bot.event
 async def on_ready():
@@ -32,21 +31,56 @@ async def echo(ctx,*,message):
 
 
 # AI prediction command
-@bot.slash_command(name='ask',description='ask falcon-180b-demo AI')
-async def ask(ctx,*,question):
-    # create a thread to run the prediction
+@bot.slash_command(name='falcon180b',description='ask falcon-180b-demo AI')
+async def falcon180b(ctx,*,question):
     # channel = bot.get_channel(ctx.channel_id)
-    # create a thread 
+    # if channel name is falcon-180b-demo
+    if ctx.channel.name == "falcon-180b-demo":
+        await ctx.respond(f"Creating a thread for {ctx.author.mention} ")
+        try : 
+            # preparing the prediction before creating the thread
+            prediction = predict(question)
+            thread =  await ctx.channel.create_thread(name=question,type=discord.ChannelType.public_thread) 
+            await thread.send(prediction)
+        except Exception as e: 
+            await thread.send(e)
+    else:
+        await ctx.respond(f"Please use this command in the channel falcon-180b-demo")
 
-    await ctx.respond(f"Creating a thread for {ctx.author.mention} ")
-    # await thread.send("This message is sent to the created thread!")
-    try : 
-        # preparing the prediction before creating the thread
-        prediction = predict(question)
-        thread =  await ctx.channel.create_thread(name=question,type=discord.ChannelType.public_thread) 
-        await thread.send(prediction)
-    except Exception as e: 
-        await thread.send(e)
+@bot.event
+async def on_message(message):
+    """
+    continue the chat in the thread
+    """
+    # if the message is from the bot ignore it
+    if message.author == bot.user:
+        return
+    # if the message is from the thread
+    if message.channel.type == discord.ChannelType.public_thread:
+        # if the message is from the bot ignore it
+        if message.author == bot.user:
+            return
+        # FIX THIS !!!!!!!!!!!!
+        # print all methods for the message object
+        print(dir(message))
+        print("the content of the message is ", message.content)
+        # preparing the prediction
+        prediction = predict(message.content,"")
+        # send the prediction
+        await message.reply(prediction)
+    await bot.process_commands(message)
+    
+
+
+# setup create the falcon-180b-demo channel
+@bot.slash_command(name='setup',description='setup the bot')
+async def setup(ctx):
+    # if channel falcon-180b-demo doesn't exist create it
+    if not discord.utils.get(ctx.guild.channels, name="falcon-180b-demo"):
+        await ctx.guild.create_text_channel("falcon-180b-demo",category=ctx.channel.category)
+        ctx.respond("falcon-180b-demo channel created")
+    else:
+        await ctx.respond("falcon-180b-demo channel already exist")
 
 
 # running in thread
