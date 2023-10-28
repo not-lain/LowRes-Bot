@@ -91,7 +91,7 @@ async def setup(ctx):
     # if channel falcon-180b-demo doesn't exist create it
     if not discord.utils.get(ctx.guild.channels, name="falcon-180b-demo"):
         await ctx.guild.create_text_channel("falcon-180b-demo",category=ctx.channel.category)
-        ctx.respond("falcon-180b-demo channel created")
+        await ctx.respond("falcon-180b-demo channel created")
     else:
         # TODO: tag the channel
         await ctx.respond("#falcon-180b-demo channel already exist")
