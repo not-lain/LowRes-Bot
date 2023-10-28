@@ -51,7 +51,7 @@ async def falcon180b(ctx,*,question):
             await ctx.respond(f"""
                               use this command in the channel #falcon-180b-demo\nuse `/setup` to create the channel if it doesn't exist""")
     except Exception as e:
-        ctx.respond(e)
+        await ctx.respond(e)
 
 @bot.event
 async def on_message(message):
