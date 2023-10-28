@@ -8,7 +8,10 @@ from threading import Event
 event = Event()
 
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-bot = discord.Bot()
+
+intents = discord.Intents.default()
+intents.message_content = True
+bot = discord.Bot(intents=intents)
 
 client = Client("tiiuae/falcon-180b-demo")
 def predict(text,history=""):
@@ -61,14 +64,17 @@ async def on_message(message):
         if message.author == bot.user:
             return
         # FIX THIS !!!!!!!!!!!!
-        # print all methods for the message object
-        print(dir(message))
-        print("the content of the message is ", message.content)
-        # preparing the prediction
-        prediction = predict(message.content,"")
-        # send the prediction
-        await message.reply(prediction)
-    await bot.process_commands(message)
+        print("the content of the message is ", message.content) # WORKS WITH INTENTS
+        print("the author of the message is ", message.author) # me :p 
+        print("the channel of the message is ", message.channel) # hello
+        print("the type of the channel of the message is ", message.channel.type) # public_thread
+        print("the parent of the thread of the message is ", message.channel.parent) # falcon-180b-demo
+        print("the id of the thread of the message is ", message.channel.id) # channel_id: int 
+    #     # preparing the prediction
+    #     prediction = predict(message.content,"")
+    #     # send the prediction
+    #     await message.reply(prediction)
+    # await bot.process_commands(message)
     
 
 
