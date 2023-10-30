@@ -13,7 +13,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = discord.Bot(intents=intents)
 
-client = Client("tiiuae/falcon-180b-demo")
+client = Client("lunarflu/falcon-180b-demo-duplicate")
 def predict(text,history=""):
     return client.predict(text,history, 0.9, 256, 0.95, 1.0)
 
