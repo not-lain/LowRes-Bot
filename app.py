@@ -13,7 +13,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = discord.Bot(intents=intents)
 
-client = Client("lunarflu/falcon-180b-demo-duplicate")
+client = Client("hysts/mistral-7b")
 def predict(text,history=""):
     return client.predict(text,history, 0.9, 256, 0.95, 1.0)
 
@@ -27,14 +27,14 @@ async def on_ready():
 
 
 # AI prediction command
-@bot.slash_command(name='falcon180b',description='ask falcon-180b-demo AI')
-async def falcon180b(ctx,*,question):
+@bot.slash_command(name='mistral7b',description='ask mistral-7b-demo AI')
+async def mistral7b(ctx,*,question):
     """ 
     AI command to create the thread and ask the AI
     """
-    # if channel name is falcon-180b-demo
+    # if channel name is mistral7b
     try:
-        if ctx.channel.name == "falcon-180b-demo":
+        if ctx.channel.name == "mistral7b":
             await ctx.respond(f"Creating a thread for {ctx.author.mention} ...")
             try : 
                 # preparing the prediction before creating the thread
@@ -46,10 +46,10 @@ async def falcon180b(ctx,*,question):
                 await thread.send(e)
         else:
             # TODO:
-            # tag the channel #falcon-180b-demo
+            # tag the channel #mistral7b
             # create the channel if we can't find it, tag it and let the user know that we created it
             await ctx.respond(f"""
-                              use this command in the channel #falcon-180b-demo\nuse `/setup` to create the channel if it doesn't exist""")
+                              use this command in the channel #mistral7b\nuse `/setup` to create the channel if it doesn't exist""")
     except Exception as e:
         await ctx.respond(e)
 
@@ -62,8 +62,8 @@ async def on_message(message):
     if message.author != bot.user:
         # if the message is from the thread
         if message.channel.type in [ discord.ChannelType.public_thread, discord.ChannelType.private_thread ]:
-            # if the thread is falcon-180b-demo
-            if message.channel.parent.name == "falcon-180b-demo":
+            # if the thread is mistral7b
+            if message.channel.parent.name == "mistral7b":
                 # preparing the prediction
                 # get channel's last 10 messages
                 history = await message.channel.history(limit=10).flatten()
@@ -82,19 +82,19 @@ async def on_message(message):
 
 
 
-# setup create the falcon-180b-demo channel
+# setup create the mistral7b channel
 @bot.slash_command(name='setup',description='setup the bot')
 async def setup(ctx):
     """
-    create the #falcon-180b-demo channel
+    create the #mistral7b channel
     """
-    # if channel falcon-180b-demo doesn't exist create it
-    if not discord.utils.get(ctx.guild.channels, name="falcon-180b-demo"):
-        await ctx.guild.create_text_channel("falcon-180b-demo",category=ctx.channel.category)
-        await ctx.respond("falcon-180b-demo channel created")
+    # if channel mistral7b doesn't exist create it
+    if not discord.utils.get(ctx.guild.channels, name="mistral7b"):
+        await ctx.guild.create_text_channel("mistral7b",category=ctx.channel.category)
+        await ctx.respond("mistral7b-demo channel created")
     else:
         # TODO: tag the channel
-        await ctx.respond("#falcon-180b-demo channel already exist")
+        await ctx.respond("#mistral7b channel already exist")
 
 
 # running in thread
@@ -110,7 +110,7 @@ threading.Thread(target=run_bot).start()
 event.wait()
 
 with gr.Blocks() as demo:
-    gr.Markdown("## Falcon-180b-demo")
+    gr.Markdown("## mistral7b")
 
 
 demo.launch()
