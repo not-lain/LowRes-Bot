@@ -24,8 +24,6 @@ async def on_ready():
 
 
 
-
-
 # AI prediction command
 @bot.slash_command(name='mistral7b',description='ask mistral-7b-demo AI')
 async def mistral7b(ctx,*,question):
